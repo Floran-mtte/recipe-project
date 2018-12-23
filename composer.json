@@ -1,0 +1,21 @@
+{
+    "name": "floran/recipeproject",
+    "description": "Devoir maison recipe project",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Floran Maitte",
+            "email": "floran.maitte@edu.itescia.fr"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "twig/twig": "2.x-dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\":"app/"
+        }
+    }
+}

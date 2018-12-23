@@ -1,0 +1,155 @@
+/**general**/
+
+body
+{
+    background-color: #f7f7f7;
+}
+
+/*****/
+
+/**navBar**/
+.nav-width
+{
+    padding: 0;
+    margin-left: 100px;
+    max-width: 490px;
+}
+
+.nav-search
+{
+    width: 50%;
+}
+.nav-color-bg
+{
+    background-color: white;
+    height: 75px;
+    border-bottom: 1px solid grey;
+}
+
+.nav-color-text
+{
+    margin-left: 10px;
+    font-size: 13px;
+    color: black !important;
+    font-family: 'Raleway', sans-serif !important;
+    text-transform: uppercase;
+}
+
+.nav-title
+{
+   font-size: 25px;
+}
+
+
+#searchBar
+{
+    width: 80%;
+    margin-right: 100px;
+}
+
+/*****/
+
+
+
+.btn-color
+{
+    border: none!important;
+    background-color: #35373a !important;
+}
+
+.bg-page
+{
+    padding: 0;
+    margin: 0;
+}
+
+.body-page
+{
+    background-color: #f7f7f7;
+    height: 100%;
+}
+
+.max-width
+{
+    width: 100%;
+}
+
+.container-box
+{
+    display: inline-flex;
+}
+
+.recipeBox
+{
+    margin: 50px 0 0 70px;
+    padding: 30px 30px 60px 40px;
+    background-color: white!important;
+    border: 1px solid grey;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.headArticle
+{
+    display: inline-flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+#logoRecipe
+{
+    justify-content: flex-end;
+}
+
+.btn-color-white
+{
+    background-color: white!important;
+    border: 1px solid #bcc3ce !important;
+}
+
+.clearbox
+{
+    display: block;
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+#listRecipe
+{
+    margin-left: 74px;
+    width: 81%;
+}
+
+/**Footer part**/
+
+.footer-container
+{
+    margin-top: 200px;
+    margin-right: 50px;
+    background-color: #262626;
+    color: white;
+    width: 100%;
+    padding: 20px 0 20px 0;
+}
+
+.social-media-box
+{
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.title-footer
+{
+    text-transform: uppercase;
+    font-size: 25px;
+    font-weight: bold;
+    margin-top: 7px;
+}
+
+.icon-footer
+{
+    padding-left: 7px;
+}
+
+/*******/
