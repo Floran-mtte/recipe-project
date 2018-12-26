@@ -120,6 +120,17 @@ body
     width: 81%;
 }
 
+.scrollBox
+{
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+#ingredients
+{
+    margin-bottom: 7px;
+}
+
 /**Footer part**/
 
 .footer-container
