@@ -114,6 +114,18 @@ switch ($routeInfo[0]) {
                         echo json_encode($response);
 
                         break;
+                    case 'update':
+
+                        $headers = getallheaders();
+                        $recipeName = $headers['data-recipe-name'];
+                        $recipeTime = $headers['data-recipe-time'];
+                        $recipeIngredients = $headers['data-recipe-ingredient'];
+                        $recipeController = new RecipeController(new Recipe(null, $recipeName, $recipeTime, $recipeIngredients));
+                        $response = $recipeController->update($vars['id']);
+                        header($_SERVER["SERVER_PROTOCOL"]." ".$response['code']. " " . $http_codes[$response['code']]);
+                        echo json_encode($response);
+
+                        break;
                     case 'delete':
 
                         $recipeController = new RecipeController(new Recipe());

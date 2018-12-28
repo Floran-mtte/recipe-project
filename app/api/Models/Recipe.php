@@ -18,6 +18,7 @@ class Recipe
     protected $id;
     protected $recipeName;
     protected $recipeTime;
+    protected $ingredient = array();
 
     /**
      * Recipe constructor.
@@ -25,8 +26,9 @@ class Recipe
      * @param int id the id of the recipe
      * @param string name of the recipe
      * @param string time to do the recipe
+     * @param array ingredients of the recipe
      */
-    public function __construct($id = null, $recipeName = null, $recipeTime = null)
+    public function __construct($id = null, $recipeName = null, $recipeTime = null, $ingredient = null)
     {
         try
         {
@@ -51,6 +53,11 @@ class Recipe
         if($recipeTime != null)
         {
             $this->setRecipeTime($recipeTime);
+        }
+
+        if($ingredient != null)
+        {
+            $this->setIngredient($ingredient);
         }
     }
 
@@ -118,9 +125,25 @@ class Recipe
         $this->recipeTime = $recipeTime;
     }
 
+    /**
+     * @return array
+     */
+    public function getIngredient()
+    {
+        return $this->ingredient;
+    }
+
+    /**
+     * @param array $ingredientName
+     */
+    public function setIngredient($ingredientName)
+    {
+        $this->ingredient = $ingredientName;
+    }
+
     public function getAllRecipe()
     {
-        $query = $this->getDb()->prepare("SELECT * FROM recipe");
+        $query = $this->getDb()->prepare("SELECT * FROM recipe INNER JOIN ingredient ON recipe.id = ingredient.id_recipe");
         $query->execute();
 
         $fetch = $query->fetchall(PDO::FETCH_ASSOC);
@@ -128,27 +151,43 @@ class Recipe
         $response = array();
         if($query->rowCount() > 0)
         {
+            $result = array();
+            foreach ($fetch as $val)
+            {
+                $result[$val["id_recipe"]]["recipe_name"] = $val["recipe_name"];
+                $result[$val["id_recipe"]]["recipe_time"] = $val["recipe_time"];
+                $result[$val["id_recipe"]]["ingredient"][$val["id"]] = $val['ingredient_name'];
+            }
+
             $response['status'] = 'success';
             $response['code'] = '200';
-            $response['data'] = $fetch;
+            $response['data'] = $result;
 
             return $response;
         }
         $response['status'] = 'failed';
-        $response['code'] = '';
+        $response['code'] = '204';
         return $response;
     }
 
     public function getRecipeById($id)
     {
-        $query = $this->getDb()->prepare("SELECT * FROM recipe WHERE id = :id");
+        $query = $this->getDb()->prepare("SELECT * FROM recipe INNER JOIN ingredient ON recipe.id = ingredient.id_recipe WHERE recipe.id = :id");
         $query->execute(array("id" => $id));
 
-        $fetch = $query->fetch(PDO::FETCH_ASSOC);
+        $fetch = $query->fetchall(PDO::FETCH_ASSOC);
 
         if($query->rowCount() > 0)
         {
-            return $response = array("status" => "success","code" => 200, "data" => $fetch);
+            $result = array();
+            foreach ($fetch as $val)
+            {
+                $result[$val["id_recipe"]]["recipe_name"] = $val["recipe_name"];
+                $result[$val["id_recipe"]]["recipe_time"] = $val["recipe_time"];
+                $result[$val["id_recipe"]]["ingredient"][$val["id"]] = $val['ingredient_name'];
+            }
+
+            return $response = array("status" => "success","code" => 200, "data" => $result);
         }
         return $response = array("status" => "success", "code" => 204, "msg" => "Pas de recette pour l'id : ".$id);
     }
@@ -164,7 +203,20 @@ class Recipe
 
         if($query->rowCount() > 0)
         {
-            return $result = array("status" => "success", "code" => 200);
+            $result = array("status" => "success", "code" => 200);
+            foreach ($this->getIngredient() as $ingredient)
+            {
+                $query = $this->getDb()->prepare("UPDATE ingredient SET ingredient_name = :ingredientName WHERE id = :id");
+                $query->execute(array(
+                    "ingredientName" => $ingredient['ingredient_name'],
+                    "id" => $ingredient['id'],
+                ));
+            }
+            if($query->rowCount() > 0)
+            {
+                return $result;
+            }
+            return $result = array("status" => "failed", "code" => 500);
         }
         return $result = array("status" => "failed", "code" => 500);
     }
