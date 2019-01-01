@@ -1,6 +1,6 @@
 # **DOC API**
-API base URL : http://localhost/recipe-project/public/api.php
-To use the API you need to send data into the body of the http request in JSON format
+API base URL : http://localhost/recipe-project/public/api.php  
+To use the API you need to send data into the body of the http request in JSON format  
 Exemple for insert request at the end of the doc.
 ### INSERT RECIPE
 
