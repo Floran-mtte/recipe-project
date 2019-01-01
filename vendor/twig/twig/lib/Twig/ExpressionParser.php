@@ -618,7 +618,7 @@ class Twig_ExpressionParser
             }
         }
 
-        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.', $name), $line, $stream->getSourceContext());
+        $e = new Twig_Error_Syntax(sprintf('Unknown "%s" test.php', $name), $line, $stream->getSourceContext());
         $e->addSuggestions($name, array_keys($this->env->getTests()));
 
         throw $e;

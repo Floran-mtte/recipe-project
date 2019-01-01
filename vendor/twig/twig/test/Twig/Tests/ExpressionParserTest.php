@@ -353,7 +353,7 @@ class Twig_Tests_ExpressionParserTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @expectedException        Twig_Error_Syntax
-     * @expectedExceptionMessage Unknown "nul" test. Did you mean "null" in "index" at line 1
+     * @expectedExceptionMessage Unknown "nul" test.php Did you mean "null" in "index" at line 1
      */
     public function testUnknownTest()
     {

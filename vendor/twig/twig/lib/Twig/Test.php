@@ -10,7 +10,7 @@
  */
 
 /**
- * Represents a template test.
+ * Represents a template test.php
  *
  * @final since version 2.4.0
  *
@@ -26,10 +26,10 @@ class Twig_Test
     private $arguments = array();
 
     /**
-     * Creates a template test.
+     * Creates a template test.php
      *
      * @param string        $name     Name of this test
-     * @param callable|null $callable A callable implementing the test. If null, you need to overwrite the "node_class" option to customize compilation.
+     * @param callable|null $callable A callable implementing the test.php If null, you need to overwrite the "node_class" option to customize compilation.
      * @param array         $options  Options array
      */
     public function __construct(string $name, $callable = null, array $options = array())
@@ -54,7 +54,7 @@ class Twig_Test
     }
 
     /**
-     * Returns the callable to execute for this test.
+     * Returns the callable to execute for this test.php
      *
      * @return callable|null
      */

@@ -194,6 +194,7 @@ class Recipe
 
     public function updateRecipe($id)
     {
+        $count = 0;
         $query = $this->getDb()->prepare("UPDATE recipe SET recipe_name = :recipeName, recipe_time = :recipeTime WHERE id = :id");
         $query->execute(array(
             "recipeName" => $this->getRecipeName(),
@@ -203,35 +204,48 @@ class Recipe
 
         if($query->rowCount() > 0)
         {
-            $result = array("status" => "success", "code" => 200);
-            foreach ($this->getIngredient() as $ingredient)
-            {
-                $query = $this->getDb()->prepare("UPDATE ingredient SET ingredient_name = :ingredientName WHERE id = :id");
-                $query->execute(array(
-                    "ingredientName" => $ingredient['ingredient_name'],
-                    "id" => $ingredient['id'],
-                ));
-            }
-            if($query->rowCount() > 0)
-            {
-                return $result;
-            }
-            return $result = array("status" => "failed", "code" => 500);
+            $count = $query->rowCount();
         }
-        return $result = array("status" => "failed", "code" => 500);
+
+        foreach ($this->getIngredient() as $ingredient)
+        {
+            $query = $this->getDb()->prepare("UPDATE ingredient SET ingredient_name = :ingredientName WHERE id = :id");
+            $query->execute(array(
+                "ingredientName" => $ingredient['ingredient_name'],
+                "id" => $ingredient['id'],
+                ));
+        }
+
+        if($query->rowCount() > 0)
+        {
+            $count = $query->rowCount();
+        }
+
+        if($count > 0)
+        {
+            return $result = array("status" => "success", "code" => 200);
+        }
+        return $result = array("status" => "success", "code" => 204);
+
     }
 
     public function deleteRecipe($id)
     {
-        $query = $this->getDb()->prepare("DELETE FROM RECIPE WHERE id = :id");
+        $query = $this->getDb()->prepare("DELETE FROM ingredient WHERE id_recipe = :id");
         $query->execute(array('id' => $id));
 
         if($query->rowCount() > 0)
         {
-            return $result = array("status" => "success", "code" => 200);
+            $query = $this->getDb()->prepare("DELETE FROM recipe WHERE id = :id");
+            $query->execute(array('id' => $id));
+            if($query->rowCount() > 0)
+            {
+                return $result = array("status" => "success", "code" => 200);
+            }
+            return $result = array("status" => "success", "code" => 204, "msg" => "Pas de recette pour l'id :".$id);
         }
+        return $result = array("status" => "success", "code" => 204, "msg" => "Pas de recette pour l'id :".$id);
 
-        return $result = array("status" => "success", "code" => 204, "msg" => "L'id ".$id." est inexistant");
     }
 
     public function insertRecipe()
@@ -245,22 +259,41 @@ class Recipe
         if($query->rowCount() > 0)
         {
             $id = $this->getDb()->lastInsertId();
-            return $response = array("status" => "success", "code" => 201, "data" => array("id" => $id));
+            foreach ($this->getIngredient() as $ingredient)
+            {
+                $query = $this->getDb()->prepare("INSERT INTO ingredient(`id_recipe`,`ingredient_name`) VALUES(:idRecipe, :ingredientName)");
+                $query->execute(array("idRecipe" => $id, "ingredientName" => $ingredient['ingredient_name']));
+            }
+
+            if($query->rowCount() > 0)
+            {
+                return $response = array("status" => "success", "code" => 201, "data" => array("id" => $id));
+            }
         }
         return $response = array("status" => "failed", "code" => 500, "msg" => "Erreur lors de l'insertion de la recette");
     }
 
     public function getRecipeByVal($val)
     {
-        $query = $this->getDb()->prepare("SELECT * FROM recipe WHERE recipe_name LIKE :val");
+        $query = $this->getDb()->prepare("SELECT * FROM recipe INNER JOIN ingredient ON recipe.id = ingredient.id_recipe WHERE recipe_name LIKE :val");
         $query->execute(array("val" => $val.'%'));
+
+        $fetch = $query->fetchall(PDO::FETCH_ASSOC);
 
         if($query->rowCount() > 0)
         {
-            $fetch = $query->fetchall(PDO::FETCH_ASSOC);
-            return $response = array("status" => "success", "code" => 200, "data" => $fetch);
+            $result = array();
+            foreach ($fetch as $val)
+            {
+                $result[$val["id_recipe"]]["recipe_name"] = $val["recipe_name"];
+                $result[$val["id_recipe"]]["recipe_time"] = $val["recipe_time"];
+                $result[$val["id_recipe"]]["ingredient"][$val["id"]] = $val['ingredient_name'];
+            }
+
+            return $response = array("status" => "success","code" => 200, "data" => $result);
         }
-        return $response = array("status" => "success", "code" => 204, "msg" => "No results found");
+        return $response = array("status" => "success", "code" => 204, "msg" => "Pas de recette pour la valeur : ".$val);
+
     }
 
 }

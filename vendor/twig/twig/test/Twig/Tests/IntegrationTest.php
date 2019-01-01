@@ -262,7 +262,7 @@ class TwigTestExtension extends Twig_Extension
 }
 
 /**
- * This class is used in tests for the "length" filter and "empty" test. It asserts that __call is not
+ * This class is used in tests for the "length" filter and "empty" test.php It asserts that __call is not
  * used to convert such objects to strings.
  */
 class MagicCallStub

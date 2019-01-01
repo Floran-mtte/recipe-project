@@ -116,11 +116,14 @@ switch ($routeInfo[0]) {
                         break;
                     case 'update':
 
-                        $headers = getallheaders();
-                        $recipeName = $headers['data-recipe-name'];
-                        $recipeTime = $headers['data-recipe-time'];
-                        $recipeIngredients = $headers['data-recipe-ingredient'];
-                        $recipeController = new RecipeController(new Recipe(null, $recipeName, $recipeTime, $recipeIngredients));
+                        $params = @file_get_contents('php://input');
+                        $params = json_decode($params, true);
+                        $name = $params["recipe"]["name"];
+                        $time = $params["recipe"]["time"];
+                        $ingredient = $params["recipe"]["ingredient"];
+
+
+                        $recipeController = new RecipeController(new Recipe(null, $name, $time , $ingredient));
                         $response = $recipeController->update($vars['id']);
                         header($_SERVER["SERVER_PROTOCOL"]." ".$response['code']. " " . $http_codes[$response['code']]);
                         echo json_encode($response);
@@ -136,11 +139,13 @@ switch ($routeInfo[0]) {
                         break;
                     case 'insert':
 
-                        $headers = getallheaders();
-                        $recipeName = $headers['data-recipe-name'];
-                        $recipeTime = $headers['data-recipe-time'];
+                        $params = @file_get_contents('php://input');
+                        $params = json_decode($params, true);
+                        $name = $params["recipe"]["name"];
+                        $time = $params["recipe"]["time"];
+                        $ingredient = $params["recipe"]["ingredient"];
 
-                        $recipeController = new RecipeController(new Recipe(null,$recipeName,$recipeTime));
+                        $recipeController = new RecipeController(new Recipe(null, $name, $time, $ingredient));
                         $response = $recipeController->insert();
                         header($_SERVER["SERVER_PROTOCOL"]." ".$response['code']. " " . $http_codes[$response['code']]);
                         echo json_encode($response);
