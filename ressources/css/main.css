@@ -131,6 +131,37 @@ body
     margin-bottom: 7px;
 }
 
+.accordion
+{
+    width: 100%;
+}
+
+.accordion-header
+{
+    display: inline-flex !important;
+}
+.recipeRow
+{
+    display: inline-flex;
+    width: 100%;
+    border: solid 1px black;
+    padding: 5px;
+    background-color: #f7f7f7;
+    margin-top: 5px;
+}
+
+.recipeObject
+{
+    display: inline-block;
+}
+
+.openAccordion
+{
+    justify-content: flex-end;
+}
+
+
+
 /**Footer part**/
 
 .footer-container

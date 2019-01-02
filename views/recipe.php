@@ -86,11 +86,7 @@
 
             <div class="bodyArticle">
 
-                <div class="form-group">
-                    <label class="form-label" for="nameRecipe">Search</label>
-                    <div class="d-inline-flex max-width">
-                        <input class="form-input" type="text" id="nameRecipe" placeholder="hamburger, pizza...">
-                    </div>
+                <div id="recipeTab" class="form-group">
                 </div>
 
             </div>
