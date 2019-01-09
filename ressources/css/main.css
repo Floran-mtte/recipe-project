@@ -131,6 +131,12 @@ body
     margin-bottom: 7px;
 }
 
+.itemResult
+{
+    margin-left: 5px;
+    cursor: pointer;
+}
+
 .accordion
 {
     width: 100%;
@@ -140,6 +146,12 @@ body
 {
     display: inline-flex !important;
 }
+
+.recipeObject
+{
+    display: inline-block;
+}
+
 .recipeRow
 {
     display: inline-flex;
@@ -150,13 +162,24 @@ body
     margin-top: 5px;
 }
 
-.recipeObject
+.recipeResult
 {
+    cursor: pointer;
+    padding: 5px;
+    width: 100%;
     display: inline-block;
+    border: 1px solid black;
+    border-top: none;
+}
+
+.recipeObject:hover
+{
+    background-color: #e7e7e7e7;
 }
 
 .openAccordion
 {
+    padding-right: 5px;
     justify-content: flex-end;
 }
 
