@@ -122,7 +122,6 @@ switch ($routeInfo[0]) {
                         $time = $params["recipe"]["time"];
                         $ingredient = $params["recipe"]["ingredient"];
 
-
                         $recipeController = new RecipeController(new Recipe(null, $name, $time , $ingredient));
                         $response = $recipeController->update($vars['id']);
                         header($_SERVER["SERVER_PROTOCOL"]." ".$response['code']. " " . $http_codes[$response['code']]);

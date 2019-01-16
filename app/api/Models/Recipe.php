@@ -207,18 +207,18 @@ class Recipe
             $count = $query->rowCount();
         }
 
-        foreach ($this->getIngredient() as $ingredient)
+        $ingredients = $this->getIngredient();
+        foreach ($ingredients as $key => $ingredient)
         {
             $query = $this->getDb()->prepare("UPDATE ingredient SET ingredient_name = :ingredientName WHERE id = :id");
             $query->execute(array(
                 "ingredientName" => $ingredient['ingredient_name'],
-                "id" => $ingredient['id'],
+                "id" => $key,
                 ));
-        }
-
-        if($query->rowCount() > 0)
-        {
-            $count = $query->rowCount();
+            if($query->rowCount() > 0)
+            {
+                $count++;
+            }
         }
 
         if($count > 0)

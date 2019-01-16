@@ -24,7 +24,6 @@ $(function() {
     $('#submitRecipe').on('click', function(event) {
         var recipeName = $('#nameRecipe').val();
         var recipeTime = $('#timeRecipe').val()+':00';
-        console.log(recipeTime);
         let ingredients = {};
 
         $('.ingredient').each(function (i) {
@@ -206,6 +205,7 @@ function loadRecipe()
             for(var i in recipe.data)
             {
                 $('#recipeTab').append("<div class='recipeRow' id='"+i+"'></div>");
+                console.log($('#'+i));
                 $('#'+i).append("<div class='accordion'><input type='checkbox' id='accordion-"+i+"' name='accordion-checkbox' hidden></div>");
                 $("#"+i+" > .accordion").append("<div class='column col-2 recipeObject recipeName'><img src='../assets/img/recipe.png'>"+recipe.data[i].recipe_name+"</div><input id='name_"+i+"' type='text' value='"+recipe.data[i].recipe_name+"' hidden><div class='column col-9 recipeObject recipeTime'><img src='../assets/img/alarm-clock.png'><b>"+recipe.data[i].recipe_time+"</b></div><input id='time_"+i+"' type='text' value='"+recipe.data[i].recipe_time+"' hidden>");
                 $("#"+i+" > .accordion").append("<label class='accordion-header' for='accordion-"+i+"'><span class='openAccordion'><img src='../assets/img/add.png'></span><span id='"+i+"'class='editLine'><img src='../assets/img/edit.png'></span></label>");
@@ -213,9 +213,9 @@ function loadRecipe()
                 $("#"+i+" > .accordion > .accordion-body").append("<div id='ingredient_"+i+"'></div>");
                 for(var x in recipe.data[i].ingredient)
                 {
-                    $("#ingredient_"+i).append("<span class='ingredient_list'>"+recipe.data[i].ingredient[x]+"</span><span class='ingredient_input'><input type='text' value='"+recipe.data[i].ingredient[x]+"' hidden></span>");
+                    $("#ingredient_"+i).append("<span class='ingredient_list'>"+recipe.data[i].ingredient[x]+"</span><span class='ingredient_input'><input type='text' data-id='"+x+"' value='"+recipe.data[i].ingredient[x]+"' hidden></span>");
                 }
-                $("#"+i+" > .accordion > .accordion-body").append("<div hidden id='commandLine_"+i+"'><span><a class='updateLine'>Modifier</a></span> | <span><a class='backLine'>Annuler</a></span></div>");
+                $("#"+i+" > .accordion > .accordion-body").append("<div hidden id='commandLine_"+i+"'><span><a class='updateLine' data-id='"+i+"' onclick='updateRecipe($(this).data(\"id\"))'>Modifier</a></span> | <span><a class='backLine'>Annuler</a></span></div>");
             }
         })
         .fail(function(data, response, error){
@@ -229,4 +229,57 @@ function loadRecipe()
 function formatTime(time)
 {
 
+}
+
+function updateRecipe(id)
+{
+    let name = $('#name_'+id).val();
+    let time = $('#time_'+id).val();
+
+    let ingredients = {};
+
+    $('#ingredient_'+id+' > .ingredient_input > input').each(function (i) {
+        let id_ingredient = $(this).data('id');
+        console.log(id_ingredient);
+        if($(this).val() != "")
+        {
+            ingredients[id_ingredient] = {ingredient_name: $(this).val()};
+        }
+    });
+
+    if(name !== "" && time !== "") {
+        if (ingredients.length !== 0) {
+
+            let jsonObject =
+                {
+                    recipe:
+                        {
+                            name: name,
+                            time: time,
+                            ingredient: ingredients
+                        }
+                };
+
+            let json = JSON.stringify(jsonObject);
+
+            $.ajax({
+                url: 'http://localhost/recipe-project/public/api.php/recipe/'+id,
+                contentType: "application/json;charset=utf-8",
+                method: 'PUT',
+                data: json,
+                dataType: "json",
+                beforeSend: function (xhr) {
+
+                }
+            })
+                .done(function (data, status) {
+                })
+                .fail(function (status, response, error) {
+
+                })
+                .always(function () {
+
+                });
+        }
+    }
 }
