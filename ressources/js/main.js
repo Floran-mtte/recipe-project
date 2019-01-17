@@ -51,7 +51,7 @@ $(function() {
                 var json = JSON.stringify(jsonObject);
 
                 $.ajax({
-                    url: 'http://localhost/recipe-project/public/api.php/recipe',
+                    url: 'http://localhost/bachelor/recipe-project/public/api.php/recipe',
                     contentType: "application/json;charset=utf-8",
                     method : 'POST',
                     data: json,
@@ -99,7 +99,7 @@ $(function() {
        if(searchRecipe.length >= 3)
        {
            $.ajax({
-               url: 'http://localhost/recipe-project/public/api.php/recipe/'+searchRecipe,
+               url: 'http://localhost/bachelor/recipe-project/public/api.php/recipe/'+searchRecipe,
                method: 'GET',
            })
                .done(function (data, status) {
@@ -138,7 +138,7 @@ $(function() {
             $('#resultSearch').html('');
 
             $.ajax({
-                url:'http://localhost/recipe-project/public/api.php/recipe/'+id,
+                url:'http://localhost/bachelor/recipe-project/public/api.php/recipe/'+id,
                 method: 'GET',
                 dataType: 'json'
             })
@@ -193,7 +193,7 @@ $(function() {
 function loadRecipe()
 {
     $.ajax({
-        url: 'http://localhost/recipe-project/public/api.php/recipe',
+        url: 'http://localhost/bachelor/recipe-project/public/api.php/recipe',
         method: 'GET',
         beforeSend: function(){
 
@@ -207,15 +207,15 @@ function loadRecipe()
                 $('#recipeTab').append("<div class='recipeRow' id='"+i+"'></div>");
                 console.log($('#'+i));
                 $('#'+i).append("<div class='accordion'><input type='checkbox' id='accordion-"+i+"' name='accordion-checkbox' hidden></div>");
-                $("#"+i+" > .accordion").append("<div class='column col-2 recipeObject recipeName'><img src='../assets/img/recipe.png'>"+recipe.data[i].recipe_name+"</div><input id='name_"+i+"' type='text' value='"+recipe.data[i].recipe_name+"' hidden><div class='column col-9 recipeObject recipeTime'><img src='../assets/img/alarm-clock.png'><b>"+recipe.data[i].recipe_time+"</b></div><input id='time_"+i+"' type='text' value='"+recipe.data[i].recipe_time+"' hidden>");
+                $("#"+i+" > .accordion").append("<div id='name_text_"+i+"' class='column col-2 recipeObject recipeName'><img src='../assets/img/recipe.png'>"+recipe.data[i].recipe_name+"</div><input id='name_"+i+"' type='text' value='"+recipe.data[i].recipe_name+"' hidden><div id='time_text_"+i+"' class='column col-9 recipeObject recipeTime'><img src='../assets/img/alarm-clock.png'><b>"+recipe.data[i].recipe_time+"</b></div><input id='time_"+i+"' type='text' value='"+recipe.data[i].recipe_time+"' hidden>");
                 $("#"+i+" > .accordion").append("<label class='accordion-header' for='accordion-"+i+"'><span class='openAccordion'><img src='../assets/img/add.png'></span><span id='"+i+"'class='editLine'><img src='../assets/img/edit.png'></span></label>");
                 $("#"+i+" > .accordion").append("<div class='accordion-body'></div>");
                 $("#"+i+" > .accordion > .accordion-body").append("<div id='ingredient_"+i+"'></div>");
                 for(var x in recipe.data[i].ingredient)
                 {
-                    $("#ingredient_"+i).append("<span class='ingredient_list'>"+recipe.data[i].ingredient[x]+"</span><span class='ingredient_input'><input type='text' data-id='"+x+"' value='"+recipe.data[i].ingredient[x]+"' hidden></span>");
+                    $("#ingredient_"+i).append("<span id='ingredient_text_"+x+"' class='ingredient_list'>"+recipe.data[i].ingredient[x]+"</span><span class='ingredient_input'><input type='text' data-id='"+x+"' value='"+recipe.data[i].ingredient[x]+"' hidden></span>");
                 }
-                $("#"+i+" > .accordion > .accordion-body").append("<div hidden id='commandLine_"+i+"'><span><a class='updateLine' data-id='"+i+"' onclick='updateRecipe($(this).data(\"id\"))'>Modifier</a></span> | <span><a class='backLine'>Annuler</a></span></div>");
+                $("#"+i+" > .accordion > .accordion-body").append("<div hidden id='commandLine_"+i+"'><span><a class='updateLine' data-id='"+i+"' onclick='updateRecipe($(this).data(\"id\"))'>Modifier</a></span> | <span><a class='backLine' data-id='"+i+"' onclick='cancel($(this).data(\"id\"))'>Annuler</a></span></div>");
             }
         })
         .fail(function(data, response, error){
@@ -224,11 +224,6 @@ function loadRecipe()
         .always(function() {
 
         });
-}
-
-function formatTime(time)
-{
-
 }
 
 function updateRecipe(id)
@@ -263,7 +258,7 @@ function updateRecipe(id)
             let json = JSON.stringify(jsonObject);
 
             $.ajax({
-                url: 'http://localhost/recipe-project/public/api.php/recipe/'+id,
+                url: 'http://localhost/bachelor/recipe-project/public/api.php/recipe/'+id,
                 contentType: "application/json;charset=utf-8",
                 method: 'PUT',
                 data: json,
@@ -273,6 +268,28 @@ function updateRecipe(id)
                 }
             })
                 .done(function (data, status) {
+                    $('#name_text_'+id).html('').append("<img src='../assets/img/recipe.png'>'"+$('#name_'+id).val());
+                    $('#time_text_'+id).html('').append("<img src='../assets/img/alarm-clock.png'>'"+$('#time_'+id).val());
+
+                    $('#name_'+id).hide();
+                    $('#time_'+id).hide();
+
+
+                    $('#name_text_'+id).show();
+                    $('#time_text_'+id).show();
+
+                    let ingredient_name = [];
+                    $('#ingredient_'+id+' > .ingredient_input > input').each(function (i) {
+                        ingredient_name[i] = $(this).val();
+                        $(this).hide();
+                    });
+
+                    $('#ingredient_'+id+' > .ingredient_list').each(function (i) {
+                        $(this).show();
+                        $(this).text(ingredient_name[i]);
+                    });
+
+                    $('#commandLine_'+id).hide();
                 })
                 .fail(function (status, response, error) {
 
@@ -282,4 +299,24 @@ function updateRecipe(id)
                 });
         }
     }
+
+}
+
+function cancel(id) {
+    $('#name_'+id).hide();
+    $('#time_'+id).hide();
+
+
+    $('#name_text_'+id).show();
+    $('#time_text_'+id).show();
+
+    $('#ingredient_'+id+' > .ingredient_input > input').each(function (i) {
+        $(this).hide();
+    });
+
+    $('#ingredient_'+id+' > .ingredient_list').each(function (i) {
+        $(this).show();
+    });
+
+    $('#commandLine_'+id).hide();
 }
