@@ -35,7 +35,7 @@ Exemple for insert request at the end of the doc.
     >  recipe time  : string 'time' (mysql format ex 00:00:00)
     >  ingredients  : array  'ingredient' :
 		 > 	ingredient id   : int    'id'
-         > 	ingredient name : string 'ingredient_name'
+                 > 	ingredient name : string 'ingredient_name'
          
 ### DELETE RECIPE
 
